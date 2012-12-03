@@ -16,7 +16,7 @@ using Windows.Storage;
 using System.Net.Http;          /* For http handlers */
 using System.Net.Http.Headers;  /* For ProductInfoHeaderValue class */ 
 using Windows.Storage.Streams;  /* Used to store a video stream to a file */
-using System.Threading.Tasks;  /* Tasks */ 
+using System.Threading.Tasks;   /* Tasks */ 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -36,13 +36,16 @@ namespace Memento
 
         HttpClient httpClient;
 
+        #region Default constructor
         public MainPage()
         {
             this.InitializeComponent();
             appSettings = ApplicationData.Current.LocalSettings.Values;
            
         }
+        #endregion 
 
+        #region OnNavigatedTo
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
@@ -73,18 +76,19 @@ namespace Memento
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Sample", "v8"));
 
         }
+        #endregion 
 
+        #region Start recording 
         private async void startRecordingBtn_Click_1(object sender, RoutedEventArgs e)
         {
             try
             {
-                //rootPage.NotifyUser("", NotifyType.StatusMessage);
-
                 // Using Windows.Media.Capture.CameraCaptureUI API to capture a photo
                 CameraCaptureUI dialog = new CameraCaptureUI();
                 dialog.VideoSettings.Format = CameraCaptureUIVideoFormat.Mp4;
 
                 StorageFile file = await dialog.CaptureFileAsync(CameraCaptureUIMode.Video);
+
                 if (file != null)
                 {
                     IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
@@ -95,15 +99,15 @@ namespace Memento
                 }
                 else
                 {
-                    //rootPage.NotifyUser("No video captured.", NotifyType.StatusMessage);
                 }
             }
             catch (Exception ex)
             {
-                //rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
             }
         }
+        #endregion 
 
+        #region CaptureVideo_Click
         /// <summary>
         /// This is the click handler for the 'CaptureButton' button.
         /// </summary>
@@ -113,14 +117,12 @@ namespace Memento
         {
             try
             {
-                //rootPage.NotifyUser("", NotifyType.StatusMessage);
-
                 // Using Windows.Media.Capture.CameraCaptureUI API to capture a photo
                 CameraCaptureUI dialog = new CameraCaptureUI();
                 dialog.VideoSettings.Format = CameraCaptureUIVideoFormat.Mp4;
 
                 StorageFile file = await dialog.CaptureFileAsync(CameraCaptureUIMode.Video);
-                // I'm not able to record a video right now... How do I start recording? 
+
                 if (file != null)
                 {
                     IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
@@ -139,32 +141,21 @@ namespace Memento
                 //rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
             }
         }
+        #endregion 
+
+        #region NotifyUser
+        /// <summary>
+        ///  This function will be used to notify the user of the status of their video. 
+        ///         i.e., Video transmission success or failure
+        /// </summary>
+        /// <param name="strMessage"></param>
+        /// <param name="type"></param>
         public void NotifyUser(string strMessage, NotifyType type)
         {
-            switch (type)
-            {
-                // Use the status message style.
-                case NotifyType.StatusMessage:
-                    //StatusBlock.Style = Resources["StatusStyle"] as Style;
-                    break;
-                // Use the error message style.
-                case NotifyType.ErrorMessage:
-                    //StatusBlock.Style = Resources["ErrorStyle"] as Style;
-                    break;
-            }
-            //StatusBlock.Text = strMessage;
-
-            // Collapse the StatusBlock if it has no text to conserve real estate.
-            //if (StatusBlock.Text != String.Empty)
-            //{
-            //    StatusBlock.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            //}
-            //else
-            //{
-            //    StatusBlock.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            //} 
         }
+        #endregion 
 
+        #region ReloadVideo
         /// <summary>
         /// Loads the video from file path
         /// </summary>
@@ -176,49 +167,44 @@ namespace Memento
                 StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
                 IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                 CapturedVideo.SetSource(fileStream, "video/mp4");
-                //rootPage.NotifyUser("", NotifyType.StatusMessage);
             }
             catch (Exception ex)
             {
                 appSettings.Remove(videoKey);
-                //rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
             }
         }
+        #endregion 
 
+        #region Send button click 
         private async void sendBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 MultipartFormDataContent form = new MultipartFormDataContent();
-                string filepath = "C:\\Users\\Griffin\\AppData\\Local\\Packages\\1957dd34-ee02-42da-a878-e11efa152641_f7f6khtztvxxm\\TempState\\video004.mp4";
+                string filepath = "C:\\Users\\Griffin\\AppData\\Local\\Packages\\1957dd34-ee02-42da-a878-e11efa152641_f7f6khtztvxxm\\TempState\\video006.mp4";
                 StorageFile file = await StorageFile.GetFileFromPathAsync(filepath);
                 var stream = await file.OpenReadAsync();
-                //IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                StreamContent streamContent = new StreamContent(stream.AsStream(), 1024); 
+                StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
                 form.Add(streamContent, "video", file.Path);
                 string address = "http://momento.wadec.com/upload";
                 HttpResponseMessage response = await httpClient.PostAsync(address, form);
-
-                //await Helpers.DisplayTextResult(response, OutputField);
-
-                //rootPage.NotifyUser("Completed", NotifyType.StatusMessage);
             }
             catch (HttpRequestException hre)
             {
-                //rootPage.NotifyUser("Error", NotifyType.ErrorMessage);
-                //OutputField.Text = hre.ToString();
             }
             catch (TaskCanceledException)
             {
-                //rootPage.NotifyUser("Request canceled.", NotifyType.ErrorMessage);
             }
         }
+        #endregion 
 
     }
 
+    #region NotifyType enum 
     public enum NotifyType
     {
         StatusMessage,
         ErrorMessage
     };
+    #endregion 
 }
