@@ -16,7 +16,8 @@ using Windows.Storage;
 using System.Net.Http;          /* For http handlers */
 using System.Net.Http.Headers;  /* For ProductInfoHeaderValue class */ 
 using Windows.Storage.Streams;  /* Used to store a video stream to a file */
-using System.Threading.Tasks;   /* Tasks */ 
+using System.Threading.Tasks;   /* Tasks */
+using Memento.Common; 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,14 +26,17 @@ namespace Memento
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Memento.Common.LayoutAwarePage
     {
         // A pointer back to the main page.  This is needed if you want to call methods in MainPage such
         // as NotifyUser()
         public static MainPage Current;
+        
         MainPage rootPage = MainPage.Current;
         private Windows.Foundation.Collections.IPropertySet appSettings;
         private const String videoKey = "capturedVideo";
+        public static string filePath; 
+
 
         HttpClient httpClient;
 
@@ -78,35 +82,6 @@ namespace Memento
         }
         #endregion 
 
-        #region Start recording 
-        private async void startRecordingBtn_Click_1(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                // Using Windows.Media.Capture.CameraCaptureUI API to capture a photo
-                CameraCaptureUI dialog = new CameraCaptureUI();
-                dialog.VideoSettings.Format = CameraCaptureUIVideoFormat.Mp4;
-
-                StorageFile file = await dialog.CaptureFileAsync(CameraCaptureUIMode.Video);
-
-                if (file != null)
-                {
-                    IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
-                    CapturedVideo.SetSource(fileStream, "video/mp4");
-
-                    // Store the file path in Application Data
-                    appSettings[videoKey] = file.Path;
-                }
-                else
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-        #endregion 
-
         #region CaptureVideo_Click
         /// <summary>
         /// This is the click handler for the 'CaptureButton' button.
@@ -129,7 +104,11 @@ namespace Memento
                     CapturedVideo.SetSource(fileStream, "video/mp4");
 
                     // Store the file path in Application Data
+                    // Each time you Capture a video file.Path is a different, randomly generated path. 
                     appSettings[videoKey] = file.Path;
+                    filePath = file.Path;       // Set the global variable so when you record a video, that's that video that will send 
+                    
+                        
                 }
                 else
                 {
@@ -180,14 +159,16 @@ namespace Memento
         {
             try
             {
-                MultipartFormDataContent form = new MultipartFormDataContent();
-                string filepath = "C:\\Users\\Griffin\\AppData\\Local\\Packages\\1957dd34-ee02-42da-a878-e11efa152641_f7f6khtztvxxm\\TempState\\video006.mp4";
-                StorageFile file = await StorageFile.GetFileFromPathAsync(filepath);
+                MultipartFormDataContent form = new MultipartFormDataContent(); 
+                StorageFile file = await StorageFile.GetFileFromPathAsync(MainPage.filePath);
                 var stream = await file.OpenReadAsync();
                 StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
                 form.Add(streamContent, "video", file.Path);
                 string address = "http://momento.wadec.com/upload";
                 HttpResponseMessage response = await httpClient.PostAsync(address, form);
+
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Your video was sent successfully!");
+                await dialog.ShowAsync();
             }
             catch (HttpRequestException hre)
             {

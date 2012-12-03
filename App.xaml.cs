@@ -23,6 +23,7 @@ namespace Memento
     /// </summary>
     sealed partial class App : Application
     {
+        public static int videoID; 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -31,6 +32,7 @@ namespace Memento
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            videoID = 1; 
 
 
         }
