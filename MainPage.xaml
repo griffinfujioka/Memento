@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="Memento.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Memento"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Right" Width="1366">
+            <Button Content="Save video" HorizontalAlignment="Left" Margin="333,620,0,0" VerticalAlignment="Top" Width="179"/>
+            <Button Content="Discard recording" HorizontalAlignment="Left" Margin="333,582,0,0" VerticalAlignment="Top" Width="179"/>
+            <Button x:Name="CaptureButton" Content="Capture Video" Margin="0,663,854,67" Click="CaptureVideo_Click" HorizontalAlignment="Right" Width="179"/>
+        </Grid>
+
+
+        <Grid x:Name="Output" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
+            <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Left" AutoPlay="True" MaxWidth="392"/>
+        </Grid>
+    </Grid>
+
+
+</Page>
