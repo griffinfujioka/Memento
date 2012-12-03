@@ -9,9 +9,9 @@
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Right" Width="1366">
-            <Button Content="Save video" HorizontalAlignment="Left" Margin="333,620,0,0" VerticalAlignment="Top" Width="179"/>
-            <Button Content="Discard recording" HorizontalAlignment="Left" Margin="333,582,0,0" VerticalAlignment="Top" Width="179"/>
-            <Button x:Name="CaptureButton" Content="Capture Video" Margin="0,663,854,67" Click="CaptureVideo_Click" HorizontalAlignment="Right" Width="179"/>
+            <Button Content="Discard video" HorizontalAlignment="Left" Margin="333,582,0,0" VerticalAlignment="Top" Width="179"/>
+            <Button x:Name="CaptureButton" Content="Capture Video" Margin="0,620,854,110" Click="CaptureVideo_Click" HorizontalAlignment="Right" Width="179"/>
+            <Button x:Name="sendBtn" Content="Send video" HorizontalAlignment="Left" Margin="333,544,0,0" VerticalAlignment="Top" Width="179" Click="sendBtn_Click"/>
         </Grid>
 
 

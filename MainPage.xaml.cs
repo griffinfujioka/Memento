@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Media.Capture;
 using Windows.Storage;
+using System.Net.Http;          /* For http handlers */
+using System.Net.Http.Headers;  /* For ProductInfoHeaderValue class */ 
 using Windows.Storage.Streams;  /* Used to store a video stream to a file */
 using System.Threading.Tasks;  /* Tasks */ 
 
@@ -31,6 +33,8 @@ namespace Memento
         MainPage rootPage = MainPage.Current;
         private Windows.Foundation.Collections.IPropertySet appSettings;
         private const String videoKey = "capturedVideo";
+
+        HttpClient httpClient;
 
         public MainPage()
         {
@@ -56,6 +60,18 @@ namespace Memento
                     await ReloadVideo(filePath.ToString());
                 }
             }
+
+            // HttpClient functionality can be extended by plugging multiple handlers together and providing
+            // HttpClient with the configured handler pipeline.
+            HttpMessageHandler handler = new HttpClientHandler();
+            handler = new PlugInHandler(handler); // Adds a custom header to every request and response message.            
+            httpClient = new HttpClient(handler);
+
+
+            // The following line sets a "User-Agent" request header as a default header on the HttpClient instance.
+            // Default headers will be sent with every request sent from this HttpClient instance.
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Sample", "v8"));
+
         }
 
         private async void startRecordingBtn_Click_1(object sender, RoutedEventArgs e)
@@ -166,6 +182,47 @@ namespace Memento
             {
                 appSettings.Remove(videoKey);
                 //rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
+            }
+        }
+
+        private async void sendBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                try
+                {
+                    string filepath = "C:\\Users\\Griffin\\AppData\\Local\\Packages\\1957dd34-ee02-42da-a878-e11efa152641_f7f6khtztvxxm\\TempState\\video004.mp4";
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(filepath);
+                    var stream = await file.OpenReadAsync(); 
+                    IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                    //StreamContent streamContent = new StreamContent(stream.AsStream(), (int)); 
+                    form.Add((StreamContent)fileStream, "file", file.Path);
+                    //HttpResponseMessage response = await httpClient.PostAsync(address, form); 
+                }
+                catch
+                {
+
+                }
+                //form.Add(new StringContent(RequestBodyField.Text), "data");
+
+                // 'AddressField' is a disabled text box, so the value is considered trusted input. When enabling the
+                // text box make sure to validate user input (e.g., by catching FormatException as shown in scenario 1).
+                //string resourceAddress = AddressField.Text.Trim();
+                //HttpResponseMessage response = await httpClient.PostAsync(resourceAddress, form);
+
+                //await Helpers.DisplayTextResult(response, OutputField);
+
+                //rootPage.NotifyUser("Completed", NotifyType.StatusMessage);
+            }
+            catch (HttpRequestException hre)
+            {
+                //rootPage.NotifyUser("Error", NotifyType.ErrorMessage);
+                //OutputField.Text = hre.ToString();
+            }
+            catch (TaskCanceledException)
+            {
+                //rootPage.NotifyUser("Request canceled.", NotifyType.ErrorMessage);
             }
         }
 
