@@ -190,26 +190,14 @@ namespace Memento
             try
             {
                 MultipartFormDataContent form = new MultipartFormDataContent();
-                try
-                {
-                    string filepath = "C:\\Users\\Griffin\\AppData\\Local\\Packages\\1957dd34-ee02-42da-a878-e11efa152641_f7f6khtztvxxm\\TempState\\video004.mp4";
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(filepath);
-                    var stream = await file.OpenReadAsync(); 
-                    IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                    //StreamContent streamContent = new StreamContent(stream.AsStream(), (int)); 
-                    form.Add((StreamContent)fileStream, "file", file.Path);
-                    //HttpResponseMessage response = await httpClient.PostAsync(address, form); 
-                }
-                catch
-                {
-
-                }
-                //form.Add(new StringContent(RequestBodyField.Text), "data");
-
-                // 'AddressField' is a disabled text box, so the value is considered trusted input. When enabling the
-                // text box make sure to validate user input (e.g., by catching FormatException as shown in scenario 1).
-                //string resourceAddress = AddressField.Text.Trim();
-                //HttpResponseMessage response = await httpClient.PostAsync(resourceAddress, form);
+                string filepath = "C:\\Users\\Griffin\\AppData\\Local\\Packages\\1957dd34-ee02-42da-a878-e11efa152641_f7f6khtztvxxm\\TempState\\video004.mp4";
+                StorageFile file = await StorageFile.GetFileFromPathAsync(filepath);
+                var stream = await file.OpenReadAsync();
+                //IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                StreamContent streamContent = new StreamContent(stream.AsStream(), 1024); 
+                form.Add(streamContent, "video", file.Path);
+                string address = "http://momento.wadec.com/upload";
+                HttpResponseMessage response = await httpClient.PostAsync(address, form);
 
                 //await Helpers.DisplayTextResult(response, OutputField);
 
