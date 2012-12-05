@@ -110,14 +110,9 @@ namespace Memento
                     
                         
                 }
-                else
-                {
-                    //rootPage.NotifyUser("No video captured.", NotifyType.StatusMessage);
-                }
             }
             catch (Exception ex)
             {
-                //rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
             }
         }
         #endregion 
@@ -165,10 +160,13 @@ namespace Memento
                 StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
                 form.Add(streamContent, "video", file.Path);
                 string address = "http://momento.wadec.com/upload";
-                HttpResponseMessage response = await httpClient.PostAsync(address, form);
+                //HttpResponseMessage response = await httpClient.PostAsync(address, form);
+                progressRing.Visibility = Visibility.Visible;
 
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Your video was sent successfully!");
+                var output = string.Format("Your video was sent successfully!\nClick here to view it online: [ Link ]\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube"); 
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
                 await dialog.ShowAsync();
+                progressRing.Visibility = Visibility.Collapsed; 
             }
             catch (HttpRequestException hre)
             {
@@ -178,6 +176,84 @@ namespace Memento
             }
         }
         #endregion 
+
+        private void discardBtn_Click(object sender, RoutedEventArgs e)
+        {
+            appSettings.Remove(videoKey);
+        }
+
+        private async void playBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (appSettings.ContainsKey(videoKey))
+            {
+                object filePath;
+                if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
+                {
+
+                    await ReloadVideo(filePath.ToString());
+                }
+            }
+        }
+
+        private async void newvideoBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Using Windows.Media.Capture.CameraCaptureUI API to capture a photo
+                CameraCaptureUI dialog = new CameraCaptureUI();
+                dialog.VideoSettings.Format = CameraCaptureUIVideoFormat.Mp4;
+
+                StorageFile file = await dialog.CaptureFileAsync(CameraCaptureUIMode.Video);
+
+                if (file != null)
+                {
+                    IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
+                    CapturedVideo.SetSource(fileStream, "video/mp4");
+
+                    // Store the file path in Application Data
+                    // Each time you Capture a video file.Path is a different, randomly generated path. 
+                    appSettings[videoKey] = file.Path;
+                    filePath = file.Path;       // Set the global variable so when you record a video, that's that video that will send 
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private async void uploadBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                StorageFile file = await StorageFile.GetFileFromPathAsync(MainPage.filePath);
+                var stream = await file.OpenReadAsync();
+                StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
+                form.Add(streamContent, "video", file.Path);
+                string address = "http://momento.wadec.com/upload";
+                //HttpResponseMessage response = await httpClient.PostAsync(address, form);
+                progressRing.Visibility = Visibility.Visible;
+
+                var output = string.Format("Your video was sent successfully!\nClick here to view it online: [ Link ]\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube");
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
+                await dialog.ShowAsync();
+                progressRing.Visibility = Visibility.Collapsed;
+            }
+            catch (HttpRequestException hre)
+            {
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+
+        private void discardButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            appSettings.Remove(videoKey);
+            CapturedVideo.Source = null; 
+        }
 
     }
 
