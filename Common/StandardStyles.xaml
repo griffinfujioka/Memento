@@ -928,7 +928,7 @@
     </Style>
     -->
 
-    <!--
+    
     <Style x:Key="CutAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="CutAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Cut"/>
@@ -981,7 +981,7 @@
     </Style>
     <Style x:Key="ManageAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="ManageAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Manage"/>
+        <Setter Property="AutomationProperties.Name" Value="My Videos"/>
         <Setter Property="Content" Value="&#xE178;"/>
     </Style>
     <Style x:Key="AllAppsAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
@@ -1035,7 +1035,6 @@
         <Setter Property="Content" Value="&#xE185;"/>
     </Style>
 
-    -->
 
     <!--
 

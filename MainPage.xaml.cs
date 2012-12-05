@@ -17,7 +17,9 @@ using System.Net.Http;          /* For http handlers */
 using System.Net.Http.Headers;  /* For ProductInfoHeaderValue class */ 
 using Windows.Storage.Streams;  /* Used to store a video stream to a file */
 using System.Threading.Tasks;   /* Tasks */
-using Memento.Common; 
+using Memento.Common;
+using System.Text.RegularExpressions; 
+
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,6 +37,7 @@ namespace Memento
         MainPage rootPage = MainPage.Current;
         private Windows.Foundation.Collections.IPropertySet appSettings;
         private const String videoKey = "capturedVideo";
+        private const String fileKey = "filePath"; 
         public static string filePath; 
 
 
@@ -63,7 +66,6 @@ namespace Memento
                 object filePath;
                 if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
                 {
-                    
                     await ReloadVideo(filePath.ToString());
                 }
             }
@@ -106,6 +108,7 @@ namespace Memento
                     // Store the file path in Application Data
                     // Each time you Capture a video file.Path is a different, randomly generated path. 
                     appSettings[videoKey] = file.Path;
+                    appSettings[fileKey] = file.Path; 
                     filePath = file.Path;       // Set the global variable so when you record a video, that's that video that will send 
                     
                         
@@ -161,12 +164,10 @@ namespace Memento
                 form.Add(streamContent, "video", file.Path);
                 string address = "http://momento.wadec.com/upload";
                 //HttpResponseMessage response = await httpClient.PostAsync(address, form);
-                progressRing.Visibility = Visibility.Visible;
 
                 var output = string.Format("Your video was sent successfully!\nClick here to view it online: [ Link ]\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube"); 
                 Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
                 await dialog.ShowAsync();
-                progressRing.Visibility = Visibility.Collapsed; 
             }
             catch (HttpRequestException hre)
             {
@@ -184,6 +185,7 @@ namespace Memento
 
         private async void playBtn_Click_1(object sender, RoutedEventArgs e)
         {
+            playBtn.VerticalAlignment = VerticalAlignment.Top; 
             if (appSettings.ContainsKey(videoKey))
             {
                 object filePath;
@@ -193,6 +195,13 @@ namespace Memento
                     await ReloadVideo(filePath.ToString());
                 }
             }
+            else
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to play.");
+                await dialog.ShowAsync();
+            }
+
+            playBtn.VerticalAlignment = VerticalAlignment.Bottom; 
         }
 
         private async void newvideoBtn_Click_1(object sender, RoutedEventArgs e)
@@ -223,23 +232,38 @@ namespace Memento
             }
         }
 
+        private string ConvertUrlsToLinks(string msg)
+        {
+            string regex = @"((www\.|(http|https|ftp|news|file)+\:\/\/)[&#95;.a-z0-9-]+\.[a-z0-9\/&#95;:@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])";
+            Regex r = new Regex(regex, RegexOptions.IgnoreCase);
+            return r.Replace(msg, "<a href=\"$1\" title=\"http://momento.wadec.com\" target=\"&#95;blank\">$1</a>").Replace("href=\"www", "href=\"http://www");
+        }
+
         private async void uploadBtn_Click_1(object sender, RoutedEventArgs e)
         {
             try
             {
-                MultipartFormDataContent form = new MultipartFormDataContent();
-                StorageFile file = await StorageFile.GetFileFromPathAsync(MainPage.filePath);
-                var stream = await file.OpenReadAsync();
-                StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
-                form.Add(streamContent, "video", file.Path);
-                string address = "http://momento.wadec.com/upload";
-                //HttpResponseMessage response = await httpClient.PostAsync(address, form);
-                progressRing.Visibility = Visibility.Visible;
+                if (appSettings.ContainsKey(videoKey))
+                {
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+                    var stream = await file.OpenReadAsync();
+                    StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
+                    form.Add(streamContent, "video", file.Path);
+                    string address = "http://momento.wadec.com/upload";
+                    //HttpResponseMessage response = await httpClient.PostAsync(address, form);
 
-                var output = string.Format("Your video was sent successfully!\nClick here to view it online: [ Link ]\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube");
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
-                await dialog.ShowAsync();
-                progressRing.Visibility = Visibility.Collapsed;
+                    var output = string.Format("Your video was sent successfully!\nView it online at momento.wadec.com");
+                    output += "\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube";
+                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
+                    await dialog.ShowAsync();
+                }
+                else
+                {
+                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to upload.");
+                    await dialog.ShowAsync();
+                }
+                
             }
             catch (HttpRequestException hre)
             {
@@ -249,10 +273,23 @@ namespace Memento
             }
         }
 
-        private void discardButton_Click_1(object sender, RoutedEventArgs e)
+        private async void discardButton_Click_1(object sender, RoutedEventArgs e)
         {
-            appSettings.Remove(videoKey);
-            CapturedVideo.Source = null; 
+            if (appSettings.ContainsKey(videoKey))
+            {
+                appSettings.Remove(videoKey);
+                CapturedVideo.Source = null;
+            }
+            else
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to discard.");
+                await dialog.ShowAsync();
+            }
+        }
+
+        private void my_videosBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
 
     }
