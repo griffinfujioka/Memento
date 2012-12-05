@@ -30,6 +30,7 @@ namespace Memento
     /// </summary>
     public sealed partial class MainPage : Memento.Common.LayoutAwarePage
     {
+        #region Variable declarations 
         // A pointer back to the main page.  This is needed if you want to call methods in MainPage such
         // as NotifyUser()
         public static MainPage Current;
@@ -39,9 +40,8 @@ namespace Memento
         private const String videoKey = "capturedVideo";
         private const String fileKey = "filePath"; 
         public static string filePath; 
-
-
         HttpClient httpClient;
+        #endregion 
 
         #region Default constructor
         public MainPage()
@@ -61,14 +61,14 @@ namespace Memento
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             // Reload previously taken video
-            if (appSettings.ContainsKey(videoKey))
-            {
-                object filePath;
-                if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
-                {
-                    await ReloadVideo(filePath.ToString());
-                }
-            }
+            //if (appSettings.ContainsKey(videoKey))
+            //{
+            //    object filePath;
+            //    if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
+            //    {
+            //        await ReloadVideo(filePath.ToString());
+            //    }
+            //}
 
             // HttpClient functionality can be extended by plugging multiple handlers together and providing
             // HttpClient with the configured handler pipeline.
@@ -152,40 +152,10 @@ namespace Memento
         }
         #endregion 
 
-        #region Send button click 
-        private async void sendBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                MultipartFormDataContent form = new MultipartFormDataContent(); 
-                StorageFile file = await StorageFile.GetFileFromPathAsync(MainPage.filePath);
-                var stream = await file.OpenReadAsync();
-                StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
-                form.Add(streamContent, "video", file.Path);
-                string address = "http://momento.wadec.com/upload";
-                //HttpResponseMessage response = await httpClient.PostAsync(address, form);
-
-                var output = string.Format("Your video was sent successfully!\nClick here to view it online: [ Link ]\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube"); 
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
-                await dialog.ShowAsync();
-            }
-            catch (HttpRequestException hre)
-            {
-            }
-            catch (TaskCanceledException)
-            {
-            }
-        }
-        #endregion 
-
-        private void discardBtn_Click(object sender, RoutedEventArgs e)
-        {
-            appSettings.Remove(videoKey);
-        }
-
+        #region Play button click 
         private async void playBtn_Click_1(object sender, RoutedEventArgs e)
         {
-            playBtn.VerticalAlignment = VerticalAlignment.Top; 
+            
             if (appSettings.ContainsKey(videoKey))
             {
                 object filePath;
@@ -193,6 +163,7 @@ namespace Memento
                 {
 
                     await ReloadVideo(filePath.ToString());
+                    
                 }
             }
             else
@@ -201,9 +172,10 @@ namespace Memento
                 await dialog.ShowAsync();
             }
 
-            playBtn.VerticalAlignment = VerticalAlignment.Bottom; 
         }
+        #endregion 
 
+        #region New video click 
         private async void newvideoBtn_Click_1(object sender, RoutedEventArgs e)
         {
             try
@@ -231,14 +203,9 @@ namespace Memento
             {
             }
         }
+        #endregion 
 
-        private string ConvertUrlsToLinks(string msg)
-        {
-            string regex = @"((www\.|(http|https|ftp|news|file)+\:\/\/)[&#95;.a-z0-9-]+\.[a-z0-9\/&#95;:@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])";
-            Regex r = new Regex(regex, RegexOptions.IgnoreCase);
-            return r.Replace(msg, "<a href=\"$1\" title=\"http://momento.wadec.com\" target=\"&#95;blank\">$1</a>").Replace("href=\"www", "href=\"http://www");
-        }
-
+        #region Upload button click 
         private async void uploadBtn_Click_1(object sender, RoutedEventArgs e)
         {
             try
@@ -246,6 +213,8 @@ namespace Memento
                 if (appSettings.ContainsKey(videoKey))
                 {
                     MultipartFormDataContent form = new MultipartFormDataContent();
+                    // BUG HERE: If the video was recorded previously, this breaks. 
+                    // That's because videos are only being stored temporarily right now. 
                     StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
                     var stream = await file.OpenReadAsync();
                     StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
@@ -272,7 +241,9 @@ namespace Memento
             {
             }
         }
+        #endregion 
 
+        #region Discard button click 
         private async void discardButton_Click_1(object sender, RoutedEventArgs e)
         {
             if (appSettings.ContainsKey(videoKey))
@@ -286,11 +257,14 @@ namespace Memento
                 await dialog.ShowAsync();
             }
         }
+        #endregion 
 
+        #region My videos app bar button click 
         private void my_videosBtn_Click_1(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(VideosPage));
         }
+        #endregion 
 
     }
 

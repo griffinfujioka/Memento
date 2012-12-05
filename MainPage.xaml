@@ -9,13 +9,13 @@
     mc:Ignorable="d">
 
     <Page.TopAppBar>
-        <AppBar x:Name="TopAppBar" Padding="10,0,10,0" AutomationProperties.Name="Bottom App Bar" IsSticky="True" IsOpen="True">
+        <AppBar x:Name="TopAppBar" Padding="10,0,10,0" AutomationProperties.Name="Top App Bar" IsSticky="True" IsOpen="True">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50*"/>
                     <ColumnDefinition Width="50*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel x:Name="TopLeftPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                <StackPanel x:Name="TopLeftPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                     <Button x:Name="loginBtn" Content="Login" Margin="8,0,8,0" BorderThickness="0" />
                     <Button x:Name="signupBtn" Content="Sign up" Margin="8,0,8,0" BorderThickness="0"/>
                 </StackPanel>
@@ -36,7 +36,7 @@
                     <Button x:Name="playBtn" Style="{StaticResource PlayAppBarButtonStyle}" Tag="Play" HorizontalAlignment="Left" Click="playBtn_Click_1" />
                     <Button x:Name="uploadBtn" Style="{StaticResource UploadAppBarButtonStyle}" Tag="Upload" HorizontalAlignment="Left" Click="uploadBtn_Click_1"/>
                     <Button x:Name="discardButton" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" HorizontalAlignment="Left" Click="discardButton_Click_1" />
-                    <Button x:Name="my_videosBtn" Style="{StaticResource ManageAppBarButtonStyle}" Tag="Manage" HorizontalAlignment="Left" Click="my_videosBtn_Click_1"/>
+                    <Button x:Name="my_videosBtn" Style="{StaticResource LibraryAppBarButtonStyle}" Tag="Manage" HorizontalAlignment="Left" Click="my_videosBtn_Click_1"/>
                 </StackPanel>
             </Grid>
         </AppBar>
@@ -44,8 +44,7 @@
     
     <Grid x:Name="LayoutRoot" Background="Black">
         <Grid HorizontalAlignment="Right" Width="1366">
-            <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Center" AutoPlay="True" MaxWidth="392" VerticalAlignment="Center"/>
-            <TextBlock HorizontalAlignment="Left" Margin="150,89,0,0" TextWrapping="Wrap" Text="Memento" VerticalAlignment="Top" Height="94" Width="411" FontFamily="Segoe UI" FontSize="64" FontStyle="Italic"/>
+            <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Center" AutoPlay="True" MaxWidth="530" VerticalAlignment="Center"/>
         </Grid>
 
 
