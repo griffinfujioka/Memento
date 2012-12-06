@@ -65,7 +65,7 @@
                                     
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Image_Name}" FontSize="22" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
-                                        <Image Source="{Binding Path=Image}" Height="400" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" />
+                                        <Image Source="{Binding Path=Image}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" />
                                         <TextBlock Text="{Binding Description}" FontFamily="Segoe UI Symbol" Width="200"  FontSize="14" Margin="5"  TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>

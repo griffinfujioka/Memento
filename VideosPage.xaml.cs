@@ -29,10 +29,9 @@ namespace Memento
             {
                 new DummiePerson{Image_Name="Made some good progress", Image="Person1.jpg", Description="I finally figured out how to calculate congruency complexity!"},
                 new DummiePerson{Image_Name="Signing off!", Image="Person2.jpg", Description="Thank you all for the awesome experience!"},
-                new DummiePerson{Image_Name="What a fun night!", Image="Person3.jpg", Description="I had such a good time with my friends tonight."},
+                new DummiePerson{Image_Name="Just woke up", Image="Person3.jpg", Description="I had such a good time with my friends tonight."},
                 new DummiePerson{Image_Name="Talk about a bad hair day...", Image="Person4.jpg", Description="You know what's awesome about summer? Long hair."},
-                new DummiePerson{Image_Name="I've been thinking about this project", Image="Person5.jpg", Description="We're on track for greatness."},
-                new DummiePerson{Image_Name="Ya know what I have to say about your haircuts... ", Image="Person6.jpg", Description="I don't like haircuts one bit. That's right, I said. it. "},
+                new DummiePerson{Image_Name="Haircuts... ", Image="Person6.jpg", Description="I don't like haircuts one bit. That's right, I said. it. "},
             };
             DataContext = list;
             groupedItemsViewSource.Source = list;  

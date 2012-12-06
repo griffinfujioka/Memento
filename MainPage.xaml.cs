@@ -91,7 +91,12 @@ namespace Memento
             //    }
             //}
 
-            
+            if (!appSettings.ContainsKey(usernameKey) || !appSettings.ContainsKey(passwordKey))
+            {
+                loginPopUp.IsOpen = true;               // so prompt the user to login 
+                usernameTxtBox.Focus(Windows.UI.Xaml.FocusState.Keyboard);
+            }
+
            
             // HttpClient functionality can be extended by plugging multiple handlers together and providing
             // HttpClient with the configured handler pipeline.
@@ -192,8 +197,8 @@ namespace Memento
             }
             else
             {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to play.");
-                await dialog.ShowAsync();
+                //Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to play.");
+                //await dialog.ShowAsync();
             }
 
         }
@@ -234,40 +239,9 @@ namespace Memento
         {
            /* video_metadataPopup.IsOpen = true;
             while (video_metadataPopup.IsOpen) ; */
-            ShowVideoDetailsDialog(); 
-
-            try
-            {
-                if (appSettings.ContainsKey(videoKey))
-                {
-                    MultipartFormDataContent form = new MultipartFormDataContent();
-                    // BUG HERE: If the video was recorded previously, this breaks. 
-                    // That's because videos are only being stored temporarily right now. 
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
-                    var stream = await file.OpenReadAsync();
-                    StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
-                    form.Add(streamContent, "video", file.Path);
-                    string address = "http://momento.wadec.com/upload";
-                    //HttpResponseMessage response = await httpClient.PostAsync(address, form);
-
-                    var output = string.Format("Your video was sent successfully!\nView it online at momento.wadec.com");
-                    output += "\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube";
-                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
-                    await dialog.ShowAsync();
-                }
-                else
-                {
-                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to upload.");
-                    await dialog.ShowAsync();
-                }
-                
-            }
-            catch (HttpRequestException hre)
-            {
-            }
-            catch (TaskCanceledException)
-            {
-            }
+            ShowVideoDetailsDialog();
+            titleTxtBox.Focus(Windows.UI.Xaml.FocusState.Keyboard);
+            
         }
         #endregion 
 
@@ -281,8 +255,8 @@ namespace Memento
             }
             else
             {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to discard.");
-                await dialog.ShowAsync();
+                //Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to discard.");
+                //await dialog.ShowAsync();
             }
         }
         #endregion 
@@ -306,13 +280,48 @@ namespace Memento
             logoutBtn.Visibility = Visibility.Visible;
             accoutnBtn.Visibility = Visibility.Visible;
             videosBtn.Visibility = Visibility.Visible;
+            signupBtn.Visibility = Visibility.Collapsed; 
+            BottomAppBar.IsOpen = true; 
         }
         #endregion 
 
         #region Submit video button click
-        private void submit_videoBtn_Click_1(object sender, RoutedEventArgs e)
+        private async void submit_videoBtn_Click_1(object sender, RoutedEventArgs e)
         {
-            video_metadataPopup.IsOpen = false; 
+            video_metadataPopup.IsOpen = false;
+
+            try
+            {
+                if (appSettings.ContainsKey(videoKey))
+                {
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    // BUG HERE: If the video was recorded previously, this breaks. 
+                    // That's because videos are only being stored temporarily right now. 
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+                    var stream = await file.OpenReadAsync();
+                    StreamContent streamContent = new StreamContent(stream.AsStream(), 1024);
+                    form.Add(streamContent, "video", file.Path);
+                    string address = "http://momento.wadec.com/upload";
+                    //HttpResponseMessage response = await httpClient.PostAsync(address, form);
+
+                    var output = string.Format("Your video was sent successfully!\nView it online at momento.wadec.com");
+                    output += "\nShare your video:\n\tTwitter\n\tFacebook\n\tYouTube";
+                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(output);
+                    await dialog.ShowAsync();
+                }
+                else
+                {
+                    //Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is no video file to upload.");
+                    //await dialog.ShowAsync();
+                }
+
+            }
+            catch (HttpRequestException hre)
+            {
+            }
+            catch (TaskCanceledException)
+            {
+            }
         }
         #endregion
 
@@ -330,7 +339,7 @@ namespace Memento
         {
             if (logoutBtn.Content.ToString() == "Login")    // If the button is showing Login, the user is logged out
             {
-                loginPopUp.IsOpen = true;               // so prompt the user to login
+                loginPopUp.IsOpen = true;               // so prompt the user to login 
                 usernameTxtBox.Focus(Windows.UI.Xaml.FocusState.Keyboard); 
             }
             else
@@ -338,10 +347,13 @@ namespace Memento
                 appSettings.Remove(usernameKey);    // Clear the username key from appSettings
                 appSettings.Remove(passwordKey);    // Clear the password key from appSettings
                 logoutBtn.Content = "Login";        // Change button text to display logout 
+
                 usernameTxtBox.Text = "";       // Clear out the username textbox
                 passwordTxtBox.Password = "";   // Clear out the password textbox
                 accoutnBtn.Visibility = Visibility.Collapsed;
                 videosBtn.Visibility = Visibility.Collapsed;
+                signupBtn.Visibility = Visibility.Visible; 
+                BottomAppBar.IsOpen = false; 
                 Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You are now logged out.");
                 await dialog.ShowAsync();
             }
@@ -359,6 +371,13 @@ namespace Memento
         private void pauseBtn_Click_1(object sender, RoutedEventArgs e)
         {
             CapturedVideo.Pause(); 
+        }
+        #endregion 
+
+        #region Account button click 
+        private void accoutnBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(AccountPage));
         }
         #endregion 
     }
