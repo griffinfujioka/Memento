@@ -38,7 +38,9 @@ namespace Memento
         MainPage rootPage = MainPage.Current;
         private Windows.Foundation.Collections.IPropertySet appSettings;
         private const String videoKey = "capturedVideo";
-        private const String fileKey = "filePath"; 
+        private const String fileKey = "filePath";
+        private const String usernameKey = "Username";
+        private const String passwordKey = "Password"; 
         public static string filePath; 
         HttpClient httpClient;
         #endregion 
@@ -49,8 +51,9 @@ namespace Memento
             this.InitializeComponent();
             appSettings = ApplicationData.Current.LocalSettings.Values;
          
-            //loginPopUp.IsOpen = true; 
-            video_metadataPopup.IsOpen = true; 
+            if(!appSettings.ContainsKey(usernameKey) || !appSettings.ContainsKey(passwordKey))
+                loginPopUp.IsOpen = true; 
+            //video_metadataPopup.IsOpen = true; 
         }
         #endregion 
 
@@ -275,6 +278,8 @@ namespace Memento
         private void submitLoginBtn_Click_1(object sender, RoutedEventArgs e)
         {
             // TODO: Verify login credentials 
+            appSettings[usernameKey] = usernameTxtBox.Text;
+            appSettings[passwordKey] = passwordTxtBox.Password; 
             loginPopUp.IsOpen = false; 
         }
 
