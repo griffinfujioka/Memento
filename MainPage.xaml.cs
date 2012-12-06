@@ -50,10 +50,26 @@ namespace Memento
         {
             this.InitializeComponent();
             appSettings = ApplicationData.Current.LocalSettings.Values;
-         
-            if(!appSettings.ContainsKey(usernameKey) || !appSettings.ContainsKey(passwordKey))
-                loginPopUp.IsOpen = true; 
+
+            // If the user is not logged in 
+            if (!appSettings.ContainsKey(usernameKey) || !appSettings.ContainsKey(passwordKey))
+            {
+                loginPopUp.IsOpen = true;
+                usernameTxtBox.Focus(Windows.UI.Xaml.FocusState.Keyboard); 
+                logoutBtn.Visibility = Visibility.Collapsed;
+                accoutnBtn.Visibility = Visibility.Collapsed;
+                videosBtn.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                loginPopUp.IsOpen = false;
+                logoutBtn.Visibility = Visibility.Visible;
+                accoutnBtn.Visibility = Visibility.Visible;
+                videosBtn.Visibility = Visibility.Visible; 
+            }
+
             //video_metadataPopup.IsOpen = true; 
+        
         }
         #endregion 
 
@@ -75,6 +91,8 @@ namespace Memento
             //    }
             //}
 
+            
+           
             // HttpClient functionality can be extended by plugging multiple handlers together and providing
             // HttpClient with the configured handler pipeline.
             HttpMessageHandler handler = new HttpClientHandler();
@@ -148,6 +166,7 @@ namespace Memento
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
                 IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                // TODO: Figure out how to resume a paused video
                 CapturedVideo.SetSource(fileStream, "video/mp4");
             }
             catch (Exception ex)
@@ -214,8 +233,8 @@ namespace Memento
         private async void uploadBtn_Click_1(object sender, RoutedEventArgs e)
         {
            /* video_metadataPopup.IsOpen = true;
-            while (video_metadataPopup.IsOpen) ; */ 
-
+            while (video_metadataPopup.IsOpen) ; */
+            ShowVideoDetailsDialog(); 
 
             try
             {
@@ -275,19 +294,73 @@ namespace Memento
         }
         #endregion 
 
+        #region Submit login credentials button click
         private void submitLoginBtn_Click_1(object sender, RoutedEventArgs e)
         {
-            // TODO: Verify login credentials 
-            appSettings[usernameKey] = usernameTxtBox.Text;
+            // TODO: Verify login credentials against user database 
+            appSettings[usernameKey] = usernameTxtBox.Text;        
             appSettings[passwordKey] = passwordTxtBox.Password; 
             loginPopUp.IsOpen = false; 
+            // if(login is valid)
+            logoutBtn.Content = "Log out";
+            logoutBtn.Visibility = Visibility.Visible;
+            accoutnBtn.Visibility = Visibility.Visible;
+            videosBtn.Visibility = Visibility.Visible;
         }
+        #endregion 
 
+        #region Submit video button click
         private void submit_videoBtn_Click_1(object sender, RoutedEventArgs e)
         {
             video_metadataPopup.IsOpen = false; 
         }
+        #endregion
 
+        #region ShowVideoDetailsDialog()
+        public int ShowVideoDetailsDialog()
+        {
+            video_metadataPopup.IsOpen = true;
+
+            return 1; 
+        }
+        #endregion
+
+        #region Logout button click
+        private async void logoutBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (logoutBtn.Content.ToString() == "Login")    // If the button is showing Login, the user is logged out
+            {
+                loginPopUp.IsOpen = true;               // so prompt the user to login
+                usernameTxtBox.Focus(Windows.UI.Xaml.FocusState.Keyboard); 
+            }
+            else
+            {
+                appSettings.Remove(usernameKey);    // Clear the username key from appSettings
+                appSettings.Remove(passwordKey);    // Clear the password key from appSettings
+                logoutBtn.Content = "Login";        // Change button text to display logout 
+                usernameTxtBox.Text = "";       // Clear out the username textbox
+                passwordTxtBox.Password = "";   // Clear out the password textbox
+                accoutnBtn.Visibility = Visibility.Collapsed;
+                videosBtn.Visibility = Visibility.Collapsed;
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You are now logged out.");
+                await dialog.ShowAsync();
+            }
+        }
+        #endregion 
+
+        #region Stop button click
+        private void stopBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            CapturedVideo.Stop(); 
+        }
+        #endregion 
+
+        #region Pause button click 
+        private void pauseBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            CapturedVideo.Pause(); 
+        }
+        #endregion 
     }
 
     #region NotifyType enum 

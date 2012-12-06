@@ -58,13 +58,15 @@
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
-                            <Grid Margin="1,0,0,6">
+                            <Grid Margin="1,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="600">
                                 <Button
                                     AutomationProperties.Name="Group Title"
                                     Style="{StaticResource TextPrimaryButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
-                                        <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource GroupHeaderTextStyle}"/>
+                                    
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Image_Name}" FontSize="22" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                                        <Image Source="{Binding Path=Image}" Height="400" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" />
+                                        <TextBlock Text="{Binding Description}" FontFamily="Segoe UI Symbol" Width="200"  FontSize="14" Margin="5"  TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -103,7 +105,7 @@
                                     Style="{StaticResource TextPrimaryButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
-                                        <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource GroupHeaderTextStyle}"/>
+                                        <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource GroupHeaderTextStyle}" FontSize="20"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -120,7 +122,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="Videos" Grid.Column="1" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Text="My Videos" Grid.Column="1" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>

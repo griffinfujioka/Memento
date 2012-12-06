@@ -15,12 +15,12 @@
                     <ColumnDefinition Width="50*"/>
                     <ColumnDefinition Width="50*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel x:Name="TopLeftPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Button x:Name="videosBtn" Content="My Videos" Margin="8,0,8,0" BorderThickness="0" Click="my_videosBtn_Click_1" />
-                    <Button x:Name="accoutnBtn" Content="Account" Margin="8,0,8,0" BorderThickness="0"/>
-                    <Button x:Name="logoutBtn" Content="Log out" Margin="8,0,8,0" BorderThickness="0"/>
-                </StackPanel>
                 <StackPanel x:Name="TopRightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="accoutnBtn" Content="Account" Margin="8,0,8,0" BorderThickness="0"/>
+                    <Button x:Name="logoutBtn" Content="Log out" Margin="8,0,8,0" BorderThickness="0" Click="logoutBtn_Click_1"/>
+                </StackPanel>
+                <StackPanel x:Name="TopLeftPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                    <Button x:Name="videosBtn" Content="My Videos" Margin="8,0,8,0" BorderThickness="0" Click="my_videosBtn_Click_1" />
                     <!--
                     <Button x:Name="settingsBtn" Style="{StaticResource SettingsAppBarButtonStyle}" Tag="Settings" BorderThickness="0"/>
                     <Button x:Name="helpBtn" Style="{StaticResource HelpAppBarButtonStyle}" Tag="Help" BorderThickness="0"/> -->
@@ -35,6 +35,8 @@
                 <StackPanel x:Name="BottomRightPanel" Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="newvideoBtn" Style="{StaticResource VideoAppBarButtonStyle}" Tag="Video" HorizontalAlignment="Left" Click="newvideoBtn_Click_1"/>
                     <Button x:Name="playBtn" Style="{StaticResource PlayAppBarButtonStyle}" Tag="Play" HorizontalAlignment="Left" Click="playBtn_Click_1" />
+                    <Button x:Name="stopBtn" Style="{StaticResource StopAppBarButtonStyle}" Tag="Stop" HorizontalAlignment="Left" Click="stopBtn_Click_1"/>
+                    <Button x:Name="pauseBtn" Style="{StaticResource PauseAppBarButtonStyle}" Tag="Pause" HorizontalAlignment="Left" Click="pauseBtn_Click_1"/>
                     <Button x:Name="uploadBtn" Style="{StaticResource UploadAppBarButtonStyle}" Tag="Upload" HorizontalAlignment="Left" Click="uploadBtn_Click_1"/>
                     <Button x:Name="discardButton" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" HorizontalAlignment="Left" Click="discardButton_Click_1" />
                     <Button x:Name="my_videosBtn" Style="{StaticResource LibraryAppBarButtonStyle}" Tag="Manage" HorizontalAlignment="Left" Click="my_videosBtn_Click_1"/>
@@ -50,19 +52,19 @@
                 <Grid Height="300" Width="900" Background="White">
                     <TextBlock Text="Video Details" FontSize="28" HorizontalAlignment="Left" Margin="259,10,0,257" Foreground="Black"/>
                     <TextBlock Text="Title:" FontSize="16" HorizontalAlignment="Left" Margin="259,48,0,228" Foreground="Black" Height="24" Width="47"  />
-                    <TextBox x:Name="titleTxtBox" Width="381" Height="20" AcceptsReturn="False" Foreground="Gray" Margin="259,70,0,198" Background="Gray" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="titleTxtBox" Width="381" Height="20" AcceptsReturn="False" Foreground="Black" Margin="259,70,0,198" Background="Gray" HorizontalAlignment="Left"/>
                     <TextBlock Text="Description:" FontSize="16" HorizontalAlignment="Left" Margin="260,107,0,169" Foreground="Black" Height="24" Width="101"  />
-                    <TextBox x:Name="desciptionTxtBox" Width="380" HorizontalAlignment="Center" AcceptsReturn="True" TextWrapping="Wrap" Background="Gray" Margin="260,131,260,88"/>
+                    <TextBox x:Name="desciptionTxtBox" Width="380" HorizontalAlignment="Center" AcceptsReturn="True" TextWrapping="Wrap" Foreground="Black" Background="Gray" Margin="260,131,260,88"/>
                     <Button x:Name="submit_videoBtn" Content="Submit" Height="35" Width="100" FontSize="16" Margin="259,239,0,26" BorderThickness="0" HorizontalAlignment="Left" IsTabStop="True" Foreground="Black" Click="submit_videoBtn_Click_1"/>
                 </Grid>
             </Popup>
-            <Popup x:Name="loginPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="300" Height="250" Margin="550,101,419,188">
+            <Popup x:Name="loginPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="300" Height="250">
                 <Grid Width="300" Height="250" Background="White">
                     <TextBlock Text="Login" FontSize="32" HorizontalAlignment="Left" Foreground="Black" Margin="8,0,0,10"/>
                     <TextBlock Text="Username:" FontSize="16" HorizontalAlignment="Left" Margin="10,52,0,178" Foreground="Black" Width="78"/>
                     <TextBox x:Name="usernameTxtBox" Width="230" Height="20" HorizontalAlignment="Left" Margin="10,77,0,136" IsTabStop="True" Background="Gray"/>
                     <TextBlock Text="Password: " FontSize="16" HorizontalAlignment="Left" Margin="10,114,0,-112" Foreground="Black"/>
-                    <PasswordBox x:Name="passwordTxtBox" Width="200" Height="20" HorizontalAlignment="Left" Margin="8,141,0,79" IsTabStop="True" Background="Gray"/>
+                    <PasswordBox x:Name="passwordTxtBox" Width="232" Height="20" HorizontalAlignment="Left" Margin="8,141,0,77" IsTabStop="True" Background="Gray"/>
                     <Button x:Name="submitLoginBtn" Content="Sign in" Height="35" Width="78" Margin="2,173,0,42" BorderThickness="0" HorizontalAlignment="Left" Click="submitLoginBtn_Click_1" IsTabStop="True" Foreground="Black"/>
                     <Button x:Name="signupBtnLoginPopup" Content="Sign up" Height="35" Width="90" BorderThickness="0" HorizontalAlignment="Left" Margin="79,173,0,42" Foreground="Black"/>
                 </Grid>
