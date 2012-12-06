@@ -49,7 +49,8 @@ namespace Memento
             this.InitializeComponent();
             appSettings = ApplicationData.Current.LocalSettings.Values;
          
-            loginPopUp.IsOpen = true; 
+            //loginPopUp.IsOpen = true; 
+            video_metadataPopup.IsOpen = true; 
         }
         #endregion 
 
@@ -209,6 +210,10 @@ namespace Memento
         #region Upload button click 
         private async void uploadBtn_Click_1(object sender, RoutedEventArgs e)
         {
+           /* video_metadataPopup.IsOpen = true;
+            while (video_metadataPopup.IsOpen) ; */ 
+
+
             try
             {
                 if (appSettings.ContainsKey(videoKey))
@@ -271,6 +276,11 @@ namespace Memento
         {
             // TODO: Verify login credentials 
             loginPopUp.IsOpen = false; 
+        }
+
+        private void submit_videoBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            video_metadataPopup.IsOpen = false; 
         }
 
     }

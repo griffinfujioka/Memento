@@ -44,7 +44,7 @@
     </Page.BottomAppBar>
     
     <Grid x:Name="LayoutRoot" Background="Black">
-        <Grid HorizontalAlignment="Right" Width="1366">
+        <Grid HorizontalAlignment="Right" Width="1366" Margin="0,-10,-10,10">
             <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Center" AutoPlay="True" MaxWidth="530" VerticalAlignment="Center"/>
             <Popup x:Name="loginPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="397" Height="479" Margin="550,101,419,188">
                 <Grid>
@@ -59,6 +59,16 @@
                         <PasswordBox x:Name="passwordTxtBox" Height="20" Width="200" HorizontalAlignment="Left" Margin="8,0,0,10" IsTabStop="True"/>
                         <Button x:Name="submitLoginBtn" Content="Login" Height="35" Width="78" Margin="8,0,0,10" BorderThickness="0" HorizontalAlignment="Left" Click="submitLoginBtn_Click_1" IsTabStop="True" />
                     </StackPanel>
+                </Grid>
+            </Popup>
+            <Popup x:Name="video_metadataPopup" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="900" Height="300" Margin="550,101,419,188">
+                <Grid Height="300" Width="900" Background="White">
+                    <TextBlock Text="Video Details" FontSize="28" HorizontalAlignment="Left" Margin="259,10,0,257" Foreground="Black"/>
+                    <TextBlock Text="Title:" FontSize="16" HorizontalAlignment="Left" Margin="259,48,0,228" Foreground="Black" Height="24" Width="47"  />
+                    <TextBox x:Name="titleTxtBox" Width="381" Height="20" AcceptsReturn="False" Foreground="Gray" Margin="259,70,0,198" Background="Gray" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Description:" FontSize="16" HorizontalAlignment="Left" Margin="260,107,0,169" Foreground="Black" Height="24" Width="101"  />
+                    <TextBox x:Name="desciptionTxtBox" Width="380" HorizontalAlignment="Center" AcceptsReturn="True" TextWrapping="Wrap" Background="Gray" Margin="260,131,260,88"/>
+                    <Button x:Name="submit_videoBtn" Content="Submit" Height="35" Width="100" FontSize="16" Margin="259,239,0,26" BorderThickness="0" HorizontalAlignment="Left" IsTabStop="True" Foreground="Black" Click="submit_videoBtn_Click_1"/>
                 </Grid>
             </Popup>
         </Grid>
