@@ -46,6 +46,21 @@
     <Grid x:Name="LayoutRoot" Background="Black">
         <Grid HorizontalAlignment="Right" Width="1366">
             <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Center" AutoPlay="True" MaxWidth="530" VerticalAlignment="Center"/>
+            <Popup x:Name="loginPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="397" Height="479" Margin="550,101,419,188">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Height="400" Width="300" Background="Crimson">
+                        <TextBlock Text="Username:" FontSize="16" HorizontalAlignment="Left" Margin="8,10,0,2" />
+                        <TextBox x:Name="usernameTxtBox" Height="20" Width="200" HorizontalAlignment="Left" Margin="8,0,0,2" IsTabStop="True"/>
+                        <TextBlock Text="Password: " FontSize="16" HorizontalAlignment="Left" Margin="8,0,0,2"/>
+                        <PasswordBox x:Name="passwordTxtBox" Height="20" Width="200" HorizontalAlignment="Left" Margin="8,0,0,10" IsTabStop="True"/>
+                        <Button x:Name="submitLoginBtn" Content="Login" Height="35" Width="78" Margin="8,0,0,10" BorderThickness="0" HorizontalAlignment="Left" Click="submitLoginBtn_Click_1" IsTabStop="True" />
+                    </StackPanel>
+                </Grid>
+            </Popup>
         </Grid>
 
 

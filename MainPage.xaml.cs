@@ -48,7 +48,8 @@ namespace Memento
         {
             this.InitializeComponent();
             appSettings = ApplicationData.Current.LocalSettings.Values;
-           
+         
+            loginPopUp.IsOpen = true; 
         }
         #endregion 
 
@@ -265,6 +266,12 @@ namespace Memento
             this.Frame.Navigate(typeof(VideosPage));
         }
         #endregion 
+
+        private void submitLoginBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            // TODO: Verify login credentials 
+            loginPopUp.IsOpen = false; 
+        }
 
     }
 
