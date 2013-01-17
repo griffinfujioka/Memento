@@ -51,6 +51,14 @@ namespace Memento
             this.InitializeComponent();
             appSettings = ApplicationData.Current.LocalSettings.Values;
 
+            var bounds = Window.Current.Bounds;
+            var height = bounds.Height;
+            var width = bounds.Width;
+            VidGrid.Width = .7 * width;     // VidGrid takes up the left half of the page
+            VideoInformationGrid.Width = .35 * width; 
+
+
+
             // If the user is not logged in 
             if (!appSettings.ContainsKey(usernameKey) || !appSettings.ContainsKey(passwordKey))
             {
@@ -68,7 +76,20 @@ namespace Memento
                 videosBtn.Visibility = Visibility.Visible; 
             }
 
-            //video_metadataPopup.IsOpen = true; 
+       
+
+            List<DummiePerson> list = new List<DummiePerson>()
+            {
+                new DummiePerson{Image_Name="Made some good progress", Image="Person1.jpg", Description="I finally figured out how to calculate congruency complexity!"},
+                new DummiePerson{Image_Name="Signing off!", Image="Person2.jpg", Description="Thank you all for the awesome experience!"},
+                new DummiePerson{Image_Name="Just woke up", Image="Person3.jpg", Description="I had such a good time with my friends tonight."},
+                new DummiePerson{Image_Name="Talk about a bad hair day...", Image="Person4.jpg", Description="You know what's awesome about summer? Long hair."},
+                new DummiePerson{Image_Name="Haircuts... ", Image="Person6.jpg", Description="I don't like haircuts one bit. That's right, I said. it. "},
+            };
+            DataContext = list;
+            groupedItemsViewSource.Source = list;
+
+            OpenVideo(); 
         
         }
         #endregion 
@@ -82,14 +103,14 @@ namespace Memento
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             // Reload previously taken video
-            //if (appSettings.ContainsKey(videoKey))
-            //{
-            //    object filePath;
-            //    if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
-            //    {
-            //        await ReloadVideo(filePath.ToString());
-            //    }
-            //}
+            if (appSettings.ContainsKey(videoKey))
+            {
+                object filePath;
+                if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
+                {
+                    await ReloadVideo(filePath.ToString());
+                }
+            }
 
             if (!appSettings.ContainsKey(usernameKey) || !appSettings.ContainsKey(passwordKey))
             {
@@ -97,6 +118,7 @@ namespace Memento
                 usernameTxtBox.Focus(Windows.UI.Xaml.FocusState.Keyboard);
             }
 
+            
            
             // HttpClient functionality can be extended by plugging multiple handlers together and providing
             // HttpClient with the configured handler pipeline.
@@ -111,6 +133,22 @@ namespace Memento
 
         }
         #endregion 
+
+        #region OpenVideo
+        private async void OpenVideo()
+        {
+            if (appSettings.ContainsKey(videoKey))
+            {
+                object filePath;
+                if (appSettings.TryGetValue(videoKey, out filePath) && filePath.ToString() != "")
+                {
+
+                    await ReloadVideo(filePath.ToString());
+
+                }
+            }
+        }
+        #endregion
 
         #region CaptureVideo_Click
         /// <summary>
@@ -173,10 +211,11 @@ namespace Memento
                 IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                 // TODO: Figure out how to resume a paused video
                 CapturedVideo.SetSource(fileStream, "video/mp4");
+                 
             }
             catch (Exception ex)
             {
-                appSettings.Remove(videoKey);
+                //appSettings.Remove(videoKey);
             }
         }
         #endregion 
