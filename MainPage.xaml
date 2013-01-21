@@ -63,84 +63,87 @@
 
 
     <!-- LayoutRoot is the horizontally scrolling page. All controls are stacked horizontally within this StackPanel -->
-    <Grid Background="Black">
-        <StackPanel x:Name="LayoutRoot" Background="Black" Orientation="Horizontal">
-            <!-- VidGrid contains all of the controls pertaining to video playback and capture -->
-            <Grid x:Name="VidGrid" HorizontalAlignment="Left" Visibility="Visible">
-                <!-- VidGrid contains 3 rows -->
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid x:Name="VideoOutputGrid">
-                    <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Center" AutoPlay="True" MaxWidth="530" MaxHeight="500" VerticalAlignment="Center" Grid.Row="0" Margin="10, 100, 10, 20"/>
-                </Grid>
+    <Grid Background="Black" Style="{StaticResource LayoutRootStyle}">
+        <ScrollViewer x:Name="MainScrollViewer" Width="Auto">
 
-                <Grid x:Name="VideoInformationGrid" Grid.Row="1" Margin="10, 10, 50, 10">
+
+            <StackPanel Background="Black" Width="Auto" Orientation="Horizontal">
+                <!-- VidGrid contains all of the controls pertaining to video playback and capture -->
+                <Grid x:Name="VidGrid" HorizontalAlignment="Left" Visibility="Visible" Grid.Column="1">
+                    <!-- VidGrid contains 3 rows -->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="TitleTxtBlock" Text="Title Textblock" Grid.Row="0" Grid.Column="0" FontSize="28" HorizontalAlignment="Left" Margin="10,10,20,10"/>
-                    <TextBlock x:Name="PublishedTxtBlock" Text="Published: 12/20/12" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="10,15,10,5"/>
+                    <Grid x:Name="VideoOutputGrid">
+                        <MediaElement x:Name="CapturedVideo" HorizontalAlignment="Center" AutoPlay="True" MaxWidth="530" MaxHeight="500" VerticalAlignment="Center" Grid.Row="0" Margin="10, 100, 10, 20"/>
+                    </Grid>
 
-                    <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,20,10" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto">
-                        <TextBlock x:Name="DescriptionTxtBlock" Text="The description textblock holds a brief description of the video. This textblock should be able handle a larger amount of text. 
+                    <Grid x:Name="VideoInformationGrid" Grid.Row="1" Margin="10, 10, 50, 10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="TitleTxtBlock" Text="Title Textblock" Grid.Row="0" Grid.Column="0" FontSize="28" HorizontalAlignment="Left" Margin="10,10,20,10"/>
+                        <TextBlock x:Name="PublishedTxtBlock" Text="Published: 12/20/12" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="10,15,10,5"/>
+
+                        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,20,10" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="DescriptionTxtBlock" Text="The description textblock holds a brief description of the video. This textblock should be able handle a larger amount of text. 
                                The description textblock holds a brief description of the video. This textblock should be able handle a larger amount of text. 
                                The description textblock holds a brief description of the video. This textblock should be able handle a larger amount of text. 
                                The description textblock holds a brief description of the video. This textblock should be able handle a larger amount of text. " TextWrapping="Wrap" Width="400" Height="Auto" FontFamily="Global User Interface"/>
-                    </ScrollViewer>
+                        </ScrollViewer>
 
 
+                    </Grid>
+
+                    <StackPanel x:Name="ButtonsPanel" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <Button x:Name="newvideoBtn" Style="{StaticResource VideoAppBarButtonStyle}" Tag="Video" HorizontalAlignment="Center" Click="newvideoBtn_Click_1"/>
+                        <Button x:Name="playBtn" Style="{StaticResource PlayAppBarButtonStyle}" Tag="Play" HorizontalAlignment="Center" Click="playBtn_Click_1" />
+                        <Button x:Name="stopBtn" Style="{StaticResource StopAppBarButtonStyle}" Tag="Stop" HorizontalAlignment="Center" Click="stopBtn_Click_1"/>
+                        <Button x:Name="pauseBtn" Style="{StaticResource PauseAppBarButtonStyle}" Tag="Pause" HorizontalAlignment="Center" Click="pauseBtn_Click_1"/>
+                        <Button x:Name="uploadBtn" Style="{StaticResource UploadAppBarButtonStyle}" Tag="Upload" HorizontalAlignment="Center" Click="uploadBtn_Click_1"/>
+                        <Button x:Name="discardButton" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" HorizontalAlignment="Center" Click="discardButton_Click_1" />
+                    </StackPanel>
+
+                    <Popup x:Name="video_metadataPopup" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="400" Height="300">
+                        <Grid Height="300" Width="400" Background="White">
+                            <TextBlock Text="Video Details" FontSize="28" HorizontalAlignment="Left" Margin="11,9,0,258" Foreground="Black"/>
+                            <TextBlock Text="Title:" FontSize="16" HorizontalAlignment="Left" Margin="11,48,0,228" Foreground="Black" Height="24" Width="47"  />
+                            <TextBox x:Name="titleTxtBox" Width="381" Height="20" AcceptsReturn="False" Foreground="Black" Margin="11,72,0,196" Background="Gray" HorizontalAlignment="Left"/>
+                            <TextBlock Text="Description:" FontSize="16" HorizontalAlignment="Left" Margin="11,109,0,167" Foreground="Black" Height="24" Width="101"  />
+                            <TextBox x:Name="desciptionTxtBox" Width="380" HorizontalAlignment="Center" AcceptsReturn="True" TextWrapping="Wrap" Foreground="Black" Background="Gray" Margin="10,138,10,59"/>
+                            <Button x:Name="submit_videoBtn" Content="Upload" Height="35" Width="100" FontSize="16" Margin="11,241,0,24" BorderThickness="0" HorizontalAlignment="Left" IsTabStop="True" Foreground="Black" Click="submit_videoBtn_Click_1"/>
+                        </Grid>
+                    </Popup>
+                    <Popup x:Name="loginPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="300" Height="250">
+                        <Grid Width="300" Height="250" Background="White">
+                            <TextBlock Text="Login" FontSize="32" HorizontalAlignment="Left" Foreground="Black" Margin="8,10,0,10"/>
+                            <TextBlock Text="Username:" FontSize="16" HorizontalAlignment="Left" Margin="10,52,0,178" Foreground="Black" Width="78"/>
+                            <TextBox x:Name="usernameTxtBox" Width="230" Height="20" HorizontalAlignment="Left" Margin="10,77,0,136" IsTabStop="True" Background="Gray"/>
+                            <TextBlock Text="Password: " FontSize="16" HorizontalAlignment="Left" Margin="10,114,0,-112" Foreground="Black"/>
+                            <PasswordBox x:Name="passwordTxtBox" Width="232" Height="20" HorizontalAlignment="Left" Margin="8,141,0,77" IsTabStop="True" Background="Gray"/>
+                            <Button x:Name="submitLoginBtn" Content="Sign in" Height="35" Width="78" Margin="2,173,0,42" BorderThickness="0" HorizontalAlignment="Left" Click="submitLoginBtn_Click_1" IsTabStop="True" Foreground="Black"/>
+
+                        </Grid>
+                    </Popup>
+
+                    <Popup x:Name="videoUploadedPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="200">
+                        <Grid Width="800" Height="200" Background="White">
+                            <TextBlock Text="Congratulations!" FontSize="32" HorizontalAlignment="Left" Foreground="Black" Margin="8,10,0,10"/>
+                            <TextBlock Text="Your video was sent successfully!" FontSize="16" HorizontalAlignment="Left" Foreground="Black" />
+                            <HyperlinkButton Content="Click to view your video" HorizontalAlignment="Center" BorderThickness="0" Foreground="Black"/>
+
+                        </Grid>
+                    </Popup>
                 </Grid>
 
-                <StackPanel x:Name="ButtonsPanel" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom">
-                    <Button x:Name="newvideoBtn" Style="{StaticResource VideoAppBarButtonStyle}" Tag="Video" HorizontalAlignment="Center" Click="newvideoBtn_Click_1"/>
-                    <Button x:Name="playBtn" Style="{StaticResource PlayAppBarButtonStyle}" Tag="Play" HorizontalAlignment="Center" Click="playBtn_Click_1" />
-                    <Button x:Name="stopBtn" Style="{StaticResource StopAppBarButtonStyle}" Tag="Stop" HorizontalAlignment="Center" Click="stopBtn_Click_1"/>
-                    <Button x:Name="pauseBtn" Style="{StaticResource PauseAppBarButtonStyle}" Tag="Pause" HorizontalAlignment="Center" Click="pauseBtn_Click_1"/>
-                    <Button x:Name="uploadBtn" Style="{StaticResource UploadAppBarButtonStyle}" Tag="Upload" HorizontalAlignment="Center" Click="uploadBtn_Click_1"/>
-                    <Button x:Name="discardButton" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" HorizontalAlignment="Center" Click="discardButton_Click_1" />
-                </StackPanel>
 
-                <Popup x:Name="video_metadataPopup" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="400" Height="300">
-                    <Grid Height="300" Width="400" Background="White">
-                        <TextBlock Text="Video Details" FontSize="28" HorizontalAlignment="Left" Margin="11,9,0,258" Foreground="Black"/>
-                        <TextBlock Text="Title:" FontSize="16" HorizontalAlignment="Left" Margin="11,48,0,228" Foreground="Black" Height="24" Width="47"  />
-                        <TextBox x:Name="titleTxtBox" Width="381" Height="20" AcceptsReturn="False" Foreground="Black" Margin="11,72,0,196" Background="Gray" HorizontalAlignment="Left"/>
-                        <TextBlock Text="Description:" FontSize="16" HorizontalAlignment="Left" Margin="11,109,0,167" Foreground="Black" Height="24" Width="101"  />
-                        <TextBox x:Name="desciptionTxtBox" Width="380" HorizontalAlignment="Center" AcceptsReturn="True" TextWrapping="Wrap" Foreground="Black" Background="Gray" Margin="10,138,10,59"/>
-                        <Button x:Name="submit_videoBtn" Content="Upload" Height="35" Width="100" FontSize="16" Margin="11,241,0,24" BorderThickness="0" HorizontalAlignment="Left" IsTabStop="True" Foreground="Black" Click="submit_videoBtn_Click_1"/>
-                    </Grid>
-                </Popup>
-                <Popup x:Name="loginPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="300" Height="250">
-                    <Grid Width="300" Height="250" Background="White">
-                        <TextBlock Text="Login" FontSize="32" HorizontalAlignment="Left" Foreground="Black" Margin="8,10,0,10"/>
-                        <TextBlock Text="Username:" FontSize="16" HorizontalAlignment="Left" Margin="10,52,0,178" Foreground="Black" Width="78"/>
-                        <TextBox x:Name="usernameTxtBox" Width="230" Height="20" HorizontalAlignment="Left" Margin="10,77,0,136" IsTabStop="True" Background="Gray"/>
-                        <TextBlock Text="Password: " FontSize="16" HorizontalAlignment="Left" Margin="10,114,0,-112" Foreground="Black"/>
-                        <PasswordBox x:Name="passwordTxtBox" Width="232" Height="20" HorizontalAlignment="Left" Margin="8,141,0,77" IsTabStop="True" Background="Gray"/>
-                        <Button x:Name="submitLoginBtn" Content="Sign in" Height="35" Width="78" Margin="2,173,0,42" BorderThickness="0" HorizontalAlignment="Left" Click="submitLoginBtn_Click_1" IsTabStop="True" Foreground="Black"/>
-
-                    </Grid>
-                </Popup>
-
-                <Popup x:Name="videoUploadedPopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="200">
-                    <Grid Width="800" Height="200" Background="White">
-                        <TextBlock Text="Congratulations!" FontSize="32" HorizontalAlignment="Left" Foreground="Black" Margin="8,10,0,10"/>
-                        <TextBlock Text="Your video was sent successfully!" FontSize="16" HorizontalAlignment="Left" Foreground="Black" />
-                        <HyperlinkButton Content="Click to view your video" HorizontalAlignment="Center" BorderThickness="0" Foreground="Black"/>
-
-                    </Grid>
-                </Popup>
-            </Grid>
-
-            <Grid x:Name="VideoArchiveGrid" Style="{StaticResource LayoutRootStyle}" >
                 <!-- Horizontal scrolling grid used in most view states -->
                 <GridView
             x:Name="itemGridView"
@@ -151,7 +154,9 @@
             ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
             ItemTemplate="{StaticResource Standard250x250ItemTemplate}"
             SelectionMode="None"
-            IsSwipeEnabled="false">
+            IsSwipeEnabled="False"
+                    Width="1200"
+                        >
 
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -184,7 +189,7 @@
                         </GroupStyle>
                     </GridView.GroupStyle>
                 </GridView>
-            </Grid>
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </common:LayoutAwarePage>
